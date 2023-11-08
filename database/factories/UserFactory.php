@@ -44,8 +44,4 @@ class UserFactory extends Factory
         });
     }
 
-    /**
-     * Indicate that the user should have a personal team.
-     */
-
 }

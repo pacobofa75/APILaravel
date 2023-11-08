@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $userAdmin = User::create([
             'name' => 'Paco',
-            'email' => 'pacobofarull@gmail.com',
+            'email' => 'pacodebofa@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt(123456789),
             'remember_token' => Str::random(10),
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         $userPlayer = User::create([
             'name' => 'Leo',
-            'email' => 'leobofarull@gmail.com',
+            'email' => 'leodebofa@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt(987654321),
             'remember_token' => Str::random(10),
