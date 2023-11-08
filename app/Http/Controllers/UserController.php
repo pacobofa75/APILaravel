@@ -75,8 +75,8 @@ class UserController extends Controller
 
         if(Auth::attempt($login_data)) {
             $user = Auth::user();
-            /** @var \App\Models\User $user **/ // Decimos que $user es una instancia de la clase User
-            $token = $user->createToken('authToken')->accessToken;
+            /** @var \App\Models\User $user **/ 
+            $token = $user->createToken('authUserToken')->accessToken;
         
             return response()->json([
                 'message' => 'Logged in successfull!',
