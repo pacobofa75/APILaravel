@@ -18,30 +18,23 @@ class UserController extends Controller
     public function register(Request $request){
         
         $validation = [
-            'name' => 'nullable|unique:users',
+            'nickname' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ];
 
-        $messages = [
-            'name.unique' => 'The name already exists.',
-            'email.required' => 'The email field is required.',
-            'email.email' => 'The email field is not valid.',
-            'email.unique' => 'The email is already registered.',
-            'password.min' => 'The password must contain a minimum of 8 characters.',
-            'password.required' => 'The password field is required.',
-
-        ];
-        $validator = Validator::make($request->all(), $validation, $messages);
+        
+        $validator = Validator::make($request->all(), $validation);
         
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()], 422);
         }
 
-        $name = $request->filled('name') ? $request->name : 'Anonymous';
+        // If no nickname is provided then assign a default "Anonymous"
+        $nickname = $request->filled('nickname') ? $request->nickname : 'Anonymous';
 
         $user = User::create([
-            'name' => $name,
+            'nickname' => $nickname,
             'email' => $request-> email,
             'password' => Hash::make($request->password),
         ])->assignRole('player');
@@ -95,37 +88,37 @@ class UserController extends Controller
     public function update(Request $request, $id){
      
         $user = User::find($id); 
-        $newName = $request-> input('name');
+        $newNickName = $request-> input('nickname');
 
         if ($user->id !== Auth::user()->id) {
             return response()->json([
-                'message' => 'Cant update the name.'], 401);
+                'message' => 'Cant update the nickname.'], 401);
         } 
-        if(empty($newName)){
+        if(empty($newNickName)){
             return response()->json([
                 'error' => 'This field is required.'], 422);
         }
 
-        if ($newName !== $user->name){
+        if ($newNickName !== $user->nickname){
             
             $validation = [
-                'name' => 'unique:users',
+                'nickname' => 'required|string|max:255',
             ];
 
     
-            $validator = Validator::make($request->only('name'), $validation);
+            $validator = Validator::make($request->only('nickname'), $validation);
             
             if ($validator->fails()) {
                 return response()->json(['message' => $validator->errors()], 422);
             }
 
-            $user->name = $newName;
+            $user->nickname = $newNickName;
             $user->save();
 
-            return response()->json(['message' => 'The name has been change.',], 200);
+            return response()->json(['message' => 'The nickname has been change.',], 200);
         } else{
 
-            return response()->json(['message' => 'Try a different name, please.',], 422);
+            return response()->json(['message' => 'Try a different nickname, please.',], 422);
         }
     }
 
@@ -151,7 +144,7 @@ class UserController extends Controller
     
             return [
                 'Id' => $user->id,
-                'Name' => $user->name,
+                'Nickname' => $user->nickname,
                 'E-mail' => $user->email,
                 'winnig rate' => $winnigRate,
             ];
@@ -163,7 +156,7 @@ class UserController extends Controller
     public function ranking(){
     
         $players = User::whereHas('roles', function ($query) {
-            $query->where('name', 'player');
+            $query->where('nickname', 'player');
         })->withCount(['games', 'games as wins_count' => function ($query) {
             $query->where('result', true);
         }])->get();
@@ -177,7 +170,7 @@ class UserController extends Controller
             $wins_rate = $player->games_count ? round(($game_won / $player->games_count) * 100, 2) : 0;
     
             return [
-                'name' => $player->name,
+                'Nickname' => $player->nickname,
                 'Wins rate' => $wins_rate,
                 'Wins' => $game_won,
                 'Total Games' => $player->games_count
@@ -192,7 +185,7 @@ class UserController extends Controller
     public function winner() {
         
             $winner = User::whereHas('roles', function ($query) {
-                $query->where('name', 'player');
+                $query->where('nickname', 'player');
             })->withCount(['games', 'games as wins_count' => function ($query) {
                 $query->where('result', true);
             }])->get()->sortByDesc(function ($user) {
@@ -204,7 +197,7 @@ class UserController extends Controller
                 $wins_rate = $winner->games_count ? round(($game_won / $winner->games_count) * 100, 2) : 0;
     
                 return response()->json([
-                    'name' => $winner->name,
+                    'nickname' => $winner->nickname,
                     'Wins rate' => $wins_rate,
                     'Wins' => $game_won,
                     'Total Games' => $winner->games_count
@@ -217,7 +210,7 @@ class UserController extends Controller
     public function loser() {
 
             $loser = User::whereHas('roles', function ($query) {
-                $query->where('name', 'player');
+                $query->where('nickname', 'player');
             })->withCount(['games', 'games as wins_count' => function ($query) {
                 $query->where('result', true);
             }])->get()->sortBy(function ($user) {
@@ -229,7 +222,7 @@ class UserController extends Controller
                 $wins_rate = $loser->games_count ? round(($game_won / $loser->games_count) * 100, 2) : 0;
     
                 return response()->json([
-                    'name' => $loser->name,
+                    'nickname' => $loser->nickname,
                     'Wins rate' => $wins_rate,
                     'Wins' => $game_won,
                     'Total Games' => $loser->games_count

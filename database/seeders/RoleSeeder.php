@@ -10,12 +10,12 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         
-        if (!Role::where('name', 'admin')->exists()) {
-            Role::create(['name' => 'admin']);
+        if (!Role::where('nickname', 'admin')->exists()) {
+            Role::create(['nickname' => 'admin']);
         }
 
-        if (!Role::where('name', 'player')->exists()) {
-            Role::create(['name' => 'player']);
+        if (!Role::where('nickname', 'player')->exists()) {
+            Role::create(['nickname' => 'player']);
         }
     }
 }

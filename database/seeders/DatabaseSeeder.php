@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
 
         $userAdmin = User::create([
-            'name' => 'Paco',
+            'nickname' => 'Paco',
             'email' => 'pacodebofa@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt(123456789),
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $userAdmin->assignRole('admin');
 
         $userPlayer = User::create([
-            'name' => 'Leo',
+            'nickname' => 'Leo',
             'email' => 'leodebofa@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt(987654321),

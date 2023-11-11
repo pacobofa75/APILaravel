@@ -19,14 +19,14 @@ Route::post('login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     
-    Route::middleware('role:player')->group(function () {
-        Route::put('/players/{id}', [UserController::class, 'update']); // Update player name
-        Route::post('/players/{id}/games/', [GameController::class, 'throwDice']); // Player makes a move
-        Route::delete('/players/{id}/games', [GameController::class, 'destroy']); // Delete all moves for player X
-        Route::get('/players/{id}/games', [GameController::class, 'listGames']); // List moves for player X
+    Route::middleware('role:player')->group(function () { // player permissions
+        Route::put('/players/{id}', [UserController::class, 'update']); // Update player nickname
+        Route::post('/players/{id}/games/', [GameController::class, 'throwDice']); // Player makes a roll
+        Route::delete('/players/{id}/games', [GameController::class, 'destroy']); // Delete all moves for player id.
+        Route::get('/players/{id}/games', [GameController::class, 'listGames']); // List moves for player id.
     });
 
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware('role:admin')->group(function () { // adnministrator permissions 
         Route::get('players', [UserController::class, 'listPlayers']); // Return all players
         Route::get('/players/ranking', [UserController::class, 'ranking']); // Average success rate
         Route::get('/players/ranking/loser', [UserController::class, 'loser']); // Player with the lowest success rate
@@ -37,5 +37,5 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::fallback(function () {
-    return response()->json(['message' => 'Log in again, please.'], 401);
+    return response()->json(['message' => 'Log in again, something failed.'], 401);
 });
