@@ -10,27 +10,39 @@ use App\Models\Game;
 
 class GameController extends Controller{
 
-    public function throwDice() {
-        $authUser = Auth::user(); 
-    
-        $dice1 = rand(1, 6);
-        $dice2 = rand(1, 6);
+
+    public function throwDice($id){
         
-        $result = ($dice1 + $dice2) === 7 ? true : false;
+        $id = Auth::id();
+        $user = User::find($id);
+
+        if ($user->hasRole('player')) {
+            $dice1 = rand(1, 6);
+            $dice2 = rand(1, 6);
     
-        $game = new Game();
-        $game->user_id = $authUser->id;
-        $game->dice1 = $dice1;
-        $game->dice2 = $dice2;
-        $game->result = $result;
-        $game->save();
-        
-        return response()->json([
-            'message' => 'You rolled the dice!',
-            'dice1' => $dice1,
-            'dice2' => $dice2,
-            'result' => $result ? "You won!!" : "You lost, Try again!!",
-        ], 200);
+            $result = ($dice1 + $dice2) === 7 ? "Winner" : "Loser";
+            
+            $rate = $user->getWinsRateAttribute(); 
+            $user->wins_rate = $rate;
+            $user->save();
+
+            $game = new Game();
+            $game->user_id = $user->id;
+            $game->dice1 = $dice1;
+            $game->dice2 = $dice2;
+            $game->result = ($dice1 + $dice2) === 7;
+    
+            $game->save();
+    
+            return response()->json([
+                'message' => 'Valid throw',
+                'dice1' => $dice1,
+                'dice2' => $dice2,
+                'result' => $result,
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Not authorized'], 401);
+        }
     }
     public function listGames(){
         

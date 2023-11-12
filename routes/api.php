@@ -27,7 +27,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware('role:admin')->group(function () { // adnministrator permissions 
-        Route::get('players', [UserController::class, 'listPlayers']); // Return all players
+        Route::get('players', [UserController::class, 'listPlayers']); // All players
         Route::get('/players/ranking', [UserController::class, 'ranking']); // Average success rate
         Route::get('/players/ranking/loser', [UserController::class, 'loser']); // Player with the lowest success rate
         Route::get('/players/ranking/winner', [UserController::class, 'winner']); // Player with the highest success rate
@@ -37,5 +37,5 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::fallback(function () {
-    return response()->json(['message' => 'Log in again, something failed.'], 401);
+    return response()->json(['message' => 'Log in again, please.'], 401);
 });
