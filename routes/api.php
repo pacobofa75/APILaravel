@@ -19,14 +19,14 @@ Route::post('login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     
-    Route::middleware('role:player')->group(function () { // player permissions
+    Route::middleware('role:player')->group(function () { // player allowed methods
         Route::put('/players/{id}', [UserController::class, 'update']); // Update player nickname
         Route::post('/players/{id}/games/', [GameController::class, 'throwDice']); // Player makes a roll
         Route::delete('/players/{id}/games', [GameController::class, 'destroy']); // Delete all moves for player id.
         Route::get('/players/{id}/games', [GameController::class, 'listGames']); // List moves for player id.
     });
 
-    Route::middleware('role:admin')->group(function () { // adnministrator permissions 
+    Route::middleware('role:admin')->group(function () { // adnministrator allowed methods 
         Route::get('players', [UserController::class, 'listPlayers']); // All players
         Route::get('/players/ranking', [UserController::class, 'ranking']); // Average success rate
         Route::get('/players/ranking/loser', [UserController::class, 'loser']); // Player with the lowest success rate

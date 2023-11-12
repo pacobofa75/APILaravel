@@ -4,44 +4,35 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use Laravel\Jetstream\Features;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * The name of the factory's corresponding model.
      *
-     * @return array<string, mixed>
+     * @var string
      */
-    public function definition(): array
-    {
-        return [
-            'nickname' => $this->faker->nickname(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'remember_token' => Str::random(10),
-            'profile_photo_path' => null,
-            'current_team_id' => null,
-        ];
-    }
+    protected $model = User::class;
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Define the model's default state.
+     *
+     * @return array
      */
-    public function unverified(): static
+    public function definition()
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
+        return [
+            'nickname' => $this->faker->nickname,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => Hash::make('1234567890'),
+        ];
     }
-
 }
+
+$factory->afterCreating(User::class, function (User $user) {
+    $role = Role::where('name', 'player')->first();
+    $user->assignRole($role);
+});
+?>

@@ -39,7 +39,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ])->assignRole('player');
 
-        return response()->json(['message' => 'Register completed'], 201); 
+        return response()->json(['message' => 'Registration completed'], 201); 
     }
     
     public function login (Request $request){
