@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "307aa5af0e769adbbe49e4b26c946963",
+    "content-hash": "0234156bc7da7a63ac05ea3d6c723a54",
     "packages": [
         {
             "name": "brick/math",
@@ -4077,16 +4077,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "6.0.1",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "9e83ebe5084689a31263581e1fa821270957b8e6"
+                "reference": "8e584d3ac09856e106f989741a2d82b094278e58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/9e83ebe5084689a31263581e1fa821270957b8e6",
-                "reference": "9e83ebe5084689a31263581e1fa821270957b8e6",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/8e584d3ac09856e106f989741a2d82b094278e58",
+                "reference": "8e584d3ac09856e106f989741a2d82b094278e58",
                 "shasum": ""
             },
             "require": {
@@ -4147,7 +4147,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/6.0.1"
+                "source": "https://github.com/spatie/laravel-permission/tree/6.1.0"
             },
             "funding": [
                 {
@@ -4155,7 +4155,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-06T19:27:13+00:00"
+            "time": "2023-11-09T22:03:17+00:00"
         },
         {
             "name": "symfony/console",
