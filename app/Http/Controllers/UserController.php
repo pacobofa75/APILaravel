@@ -85,43 +85,30 @@ class UserController extends Controller
 
     }
     
-    public function update(Request $request, $id){
-     
-        $user = User::find($id); 
-        $newNickName = $request-> input('nickname');
-
-        if ($user->id !== Auth::user()->id) {
-            return response()->json([
-                'message' => 'Cant update the nickname.'], 401);
-        } 
-        if(empty($newNickName)){
-            return response()->json([
-                'error' => 'This field is required.'], 422);
-        }
-
-        if ($newNickName !== $user->nickname){
-            
-            $validation = [
-                'nickname' => 'required|string|max:255',
-            ];
-
+    public function update(Request $request) {
+        
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'newNickname' => 'nullable|string|max:255', // Cambiado a nullable
+        ]);
     
-            $validator = Validator::make($request->only('nickname'), $validation);
-            
-            if ($validator->fails()) {
-                return response()->json(['message' => $validator->errors()], 422);
-            }
-
-            $user->nickname = $newNickName;
-            $user->save();
-
-            return response()->json(['message' => 'The nickname has been change.',], 200);
-        } else{
-
-            return response()->json(['message' => 'Try a different nickname, please.',], 422);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
         }
-    }
-
+    
+        // Authenticate the user
+        $user = Auth::guard('api')->user();
+    
+        // Si no se proporciona un nuevo apodo, establecer por defecto 'Anonymous'
+        $newNickname = $request->filled('newNickname') ? $request->input('newNickname') : 'Anonymous';
+    
+        // Update the nickname field
+        User::where('id', $user->id)->update(['nickname' => $newNickname]);
+    
+        return response()->json(['message' => 'The Nickname has been updated']);
+    } 
+    
+    
     public function logout(){
       
         /** @var \App\Models\User $user **/
@@ -156,7 +143,7 @@ class UserController extends Controller
     public function ranking(){
     
         $players = User::whereHas('roles', function ($query) {
-            $query->where('nickname', 'player');
+            $query->where('name', 'player');
         })->withCount(['games', 'games as wins_count' => function ($query) {
             $query->where('result', true);
         }])->get();
@@ -185,7 +172,7 @@ class UserController extends Controller
     public function winner() {
         
             $winner = User::whereHas('roles', function ($query) {
-                $query->where('nickname', 'player');
+                $query->where('name', 'player');
             })->withCount(['games', 'games as wins_count' => function ($query) {
                 $query->where('result', true);
             }])->get()->sortByDesc(function ($user) {
@@ -210,7 +197,7 @@ class UserController extends Controller
     public function loser() {
 
             $loser = User::whereHas('roles', function ($query) {
-                $query->where('nickname', 'player');
+                $query->where('name', 'player');
             })->withCount(['games', 'games as wins_count' => function ($query) {
                 $query->where('result', true);
             }])->get()->sortBy(function ($user) {
