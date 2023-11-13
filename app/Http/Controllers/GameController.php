@@ -10,7 +10,6 @@ use App\Models\Game;
 
 class GameController extends Controller{
 
-
     public function throwDice() {
         $authUser = Auth::user(); 
     
@@ -33,6 +32,7 @@ class GameController extends Controller{
             'result' => $result ? "You won!!" : "You lost, Try again!!",
         ], 200);
     }
+
     public function listGames(){
         
         $authUser = Auth::user();
