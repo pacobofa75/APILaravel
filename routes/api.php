@@ -23,7 +23,7 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/players/{id}', [UserController::class, 'update']); // Update player nickname
         Route::post('/players/{id}/games/', [GameController::class, 'throwDice']); // Player makes a roll
         Route::delete('/players/{id}/games', [GameController::class, 'destroy']); // Delete all moves for player id.
-        Route::get('/players/{id}/games', [GameController::class, 'listGames']); // List moves for player id.
+        Route::get('/players/{id}/games', [GameController::class, 'listGames']); // List of plays for player and % of success.
     });
 
     Route::middleware('role:admin')->group(function () { // adnministrator allowed methods 

@@ -34,34 +34,42 @@ class GameController extends Controller{
     }
 
     public function listGames(){
-        
         $authUser = Auth::user();
-        
         $games = $authUser->games;
-
-            if ($games->count() > 0) {
-                $listGames = [];
-                foreach ($games as $game) {
-                   
-                    $result = $game->result ? 'You won' : 'You lost';
-
-                    $AllGames = [
-                        'first dice' => $game->dice1,
-                        'second dice' => $game->dice2,
-                        'result' => $result,
-                    ];
-
-                    $listGames[] = $AllGames;
+    
+        if ($games->count() > 0) {
+            $listGames = [];
+            $wonCount = 0; // Contador de juegos ganados
+    
+            foreach ($games as $game) {
+                $result = $game->result ? 'You won' : 'You lost';
+    
+                // Verificar si la suma de los dados es 7
+                $isSeven = $game->dice1 + $game->dice2 === 7;
+    
+                if ($isSeven) {
+                    $wonCount++;
                 }
-
-                return response()->json([
-                    'Your Plays' => $listGames,
-                    'result'=> $authUser->result,
-                
-                ], 200);
-            } else {
-                return response()->json(['message' => 'Not games here yet.'], 202);
+    
+                $allGames = [
+                    'first dice' => $game->dice1,
+                    'second dice' => $game->dice2,
+                    'result' => $result,
+                ];
+    
+                $listGames[] = $allGames;
             }
+    
+            // Calcular el porcentaje de éxito
+            $successPercentage = $games->count() > 0 ? ($wonCount / $games->count()) * 100 : 0;
+    
+            return response()->json([
+                'Your Plays' => $listGames,
+                'Success percentage' => $successPercentage,
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Not games here yet.'], 202);
+        }
     }
 
     public function destroy()
