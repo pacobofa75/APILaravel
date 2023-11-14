@@ -26,10 +26,10 @@ class GameController extends Controller{
         $game->save();
         
         return response()->json([
-            'message' => 'You rolled the dice!',
+            'message' => 'You have rolled the dice',
             'dice1' => $dice1,
             'dice2' => $dice2,
-            'result' => $result ? "You won!!" : "You lost, Try again!!",
+            'result' => $result ? "You won!!" : "You lose!!",
         ], 200);
     }
 
@@ -42,7 +42,7 @@ class GameController extends Controller{
             $wonCount = 0; // Contador de juegos ganados
     
             foreach ($games as $game) {
-                $result = $game->result ? 'You won' : 'You lost';
+                $result = $game->result ? 'You won' : 'You lose';
     
                 // Verificar si la suma de los dados es 7
                 $isSeven = $game->dice1 + $game->dice2 === 7;
@@ -80,7 +80,7 @@ class GameController extends Controller{
 
     if ($user->games()->count() > 0) {
         $user->games()->delete();
-        return response()->json(['message' => 'You have erased all your games'], 200);
+        return response()->json(['message' => 'You have deleted all your games'], 200);
     } else {
         return response()->json(['message' => 'You havent played yet'], 204);
     }
