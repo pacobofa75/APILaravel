@@ -24,15 +24,15 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'nickname' => $this->faker->nickname,
+            'nickname' => $this->faker->unique()->word,
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('1234567890'),
         ];
     }
 }
 
-$factory->afterCreating(User::class, function (User $user) {
+User::created(function (User $user) {
     $role = Role::where('name', 'player')->first();
     $user->assignRole($role);
-});
+ });
 ?>

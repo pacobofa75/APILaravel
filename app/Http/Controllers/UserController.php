@@ -72,7 +72,7 @@ class UserController extends Controller
             $token = $user->createToken('authUserToken')->accessToken;
         
             return response()->json([
-                'message' => 'Logged in successfull!',
+                'message' => 'Login successfull!',
                 'user' => $user,
                 'token' => $token, 
             ], 200);
@@ -105,7 +105,7 @@ class UserController extends Controller
         // Update the nickname field
         User::where('id', $user->id)->update(['nickname' => $newNickname]);
     
-        return response()->json(['message' => 'The Nickname has been updated']);
+        return response()->json(['message' => 'Nickname update completed'], 200);
     } 
     
     
